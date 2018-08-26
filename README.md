@@ -1,7 +1,32 @@
 # Anti-Duplicator
 
-[TODO. There will be project description]
+Скрипт анализирует файлы внутри указанной директории и выводит список дубликатов, файлов, у которых совпадают название и размер.
 
-# Project Goals
+# Как запустить
 
-The code is written for educational purposes. Training course for web-developers - [DEVMAN.org](https://devman.org)
+Скрипт требует для своей работы установленного интерпретатора **Python** версии **3.5**.
+
+**Запуск на Linux**
+
+```bash
+$ python duplicates.py <path_to_directory># или python3, в зависимости от настроек системы
+
+# результат выполнения скрипта - список файлов-дубликатов
+Duplicates founded:
+
+test/1.txt
+test/dir2/1.txt
+
+
+test/dir2/2.txt
+test/dir2/dir3/2.txt
+
+# или уведомление, если дубликаты файлов не обнаружены
+There are not files duplicates in directory
+```
+
+Запуск на **Windows** происходит аналогично.
+
+# Цели проекта
+
+Код создан в учебных целях. В рамках учебного курса по веб-разработке - [DEVMAN.org](https://devman.org)
