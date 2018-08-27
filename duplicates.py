@@ -47,6 +47,17 @@ def get_duplicates(files_info):
     return duplicates_info
 
 
+def output_duplicates_to_console(duplicates_info):
+    if not duplicates_info:
+        print("There are not files duplicates in directory")
+    else:
+        print('Duplicates founded:', '\n')
+        for duplicate_paths in duplicates_info:
+            for duplicate_file_path in duplicate_paths:
+                print(duplicate_file_path)
+            print('\n')
+
+
 if __name__ == '__main__':
     args = parse_args()
 
@@ -60,13 +71,7 @@ if __name__ == '__main__':
         sys.exit("Directory is empty")
 
     files_info = get_files_info(files_list)
+
     duplicates_info = get_duplicates(files_info)
 
-    if not duplicates_info:
-        sys.exit("There are not files duplicates in directory")
-
-    print('Duplicates founded:', '\n')
-    for duplicate_paths in duplicates_info:
-        for duplicate_file_path in duplicate_paths:
-            print(duplicate_file_path)
-        print('\n')
+    output_duplicates_to_console(duplicates_info)
