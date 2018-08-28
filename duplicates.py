@@ -9,69 +9,62 @@ def parse_args():
     return parser.parse_args()
 
 
+def get_file_id(filename, filesize):
+    return '{}_{}'.format(filename, filesize)
+
+
 def scan_directory(path):
     if not os.path.isdir(path):
         return None
 
-    files_list = []
+    files_info = []
 
     for dir_name, subdir_list, file_list in os.walk(path):
-        for file_name in file_list:
-            files_list.append(dir_name + '/' + file_name)
+        for filename in file_list:
+            filepath = os.path.join(dir_name, filename)
+            filesize = os.path.getsize(filepath)
 
-    return files_list
+            file_id = get_file_id(filename, filesize)
+            files_info.append((file_id, filepath))
 
+    files_stats = {}
 
-def get_files_info(files_list):
-    files_info = {}
-    for file in files_list:
-        file_name = os.path.basename(file)
-        file_size = os.path.getsize(file)
+    for file_id, filepath in files_info:
+        files_stats.setdefault(file_id, []).append(filepath)
 
-        seach_key = '{}_{}'.format(file_name, file_size)
-
-        if seach_key not in files_info:
-            files_info[seach_key] = [file]
-        else:
-            files_info[seach_key].append(file)
-
-    return files_info
+    return files_stats
 
 
-def get_duplicates(files_info):
+def get_duplicates_info(files_stats):
     duplicates_info = []
-    for files_paths in files_info.values():
-        if len(files_paths) == 1:
-            continue
-        duplicates_info.append(files_paths)
+    for paths in files_stats.values():
+        if len(paths) > 1:
+            duplicates_info.append(paths)
+
     return duplicates_info
 
 
 def output_duplicates_to_console(duplicates_info):
     if not duplicates_info:
-        print("There are not files duplicates in directory")
+        print('There are not files duplicates in directory')
     else:
         print('Duplicates founded:', '\n')
-        for duplicate_paths in duplicates_info:
-            for duplicate_file_path in duplicate_paths:
-                print(duplicate_file_path)
-            print('\n')
+        for paths in duplicates_info:
+            print('\n' . join(paths), '\n')
 
 
 if __name__ == '__main__':
     args = parse_args()
 
     path = args.path
-    files_list = scan_directory(path)
+    files_stats = scan_directory(path)
 
-    if files_list is None:
-        sys.exit("Directory doesn't exist")
+    if files_stats is None:
+        sys.exit('Directory doesn\'t exist')
 
-    if not files_list:
-        sys.exit("Directory is empty")
+    if not files_stats:
+        sys.exit('Directory is empty')
 
-    files_info = get_files_info(files_list)
-
-    duplicates_info = get_duplicates(files_info)
+    duplicates_info = get_duplicates_info(files_stats)
 
     output_duplicates_to_console(duplicates_info)
