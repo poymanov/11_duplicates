@@ -9,30 +9,19 @@ def parse_args():
     return parser.parse_args()
 
 
-def get_file_id(filename, filesize):
-    return '{}_{}'.format(filename, filesize)
-
-
 def scan_directory(path):
     if not os.path.isdir(path):
         return None
 
-    files_info = []
+    files_info = {}
 
     for dir_name, subdir_list, file_list in os.walk(path):
         for filename in file_list:
             filepath = os.path.join(dir_name, filename)
             filesize = os.path.getsize(filepath)
+            files_info.setdefault((filename, filesize), []).append(filepath)
 
-            file_id = get_file_id(filename, filesize)
-            files_info.append((file_id, filepath))
-
-    files_stats = {}
-
-    for file_id, filepath in files_info:
-        files_stats.setdefault(file_id, []).append(filepath)
-
-    return files_stats
+    return files_info
 
 
 def get_duplicates_info(files_stats):
@@ -57,14 +46,14 @@ if __name__ == '__main__':
     args = parse_args()
 
     path = args.path
-    files_stats = scan_directory(path)
+    files_info = scan_directory(path)
 
-    if files_stats is None:
-        sys.exit('Directory doesn\'t exist')
+    if files_info is None:
+        sys.exit("Directory doesn't exist")
 
-    if not files_stats:
+    if not files_info:
         sys.exit('Directory is empty')
 
-    duplicates_info = get_duplicates_info(files_stats)
+    duplicates_info = get_duplicates_info(files_info)
 
     output_duplicates_to_console(duplicates_info)
