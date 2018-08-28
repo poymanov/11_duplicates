@@ -17,7 +17,6 @@ Duplicates founded:
 test/1.txt
 test/dir2/1.txt
 
-
 test/dir2/2.txt
 test/dir2/dir3/2.txt
 
